@@ -130,7 +130,7 @@ public class NQApduServiceInfo extends ApduServiceInfo implements Parcelable {
     /**
       * nxp se extension
       */
-    final ESeInfo mSeExtension;
+    ESeInfo mSeExtension;
     final FelicaInfo mFelicaExtension;
 
 
@@ -461,6 +461,14 @@ public class NQApduServiceInfo extends ApduServiceInfo implements Parcelable {
                         mAidSupport = nfcSeExtParser.getAttributeBooleanValue(0, true);
                     }
                 }
+                Log.e(TAG, "GSMA_EXT_META_DATA not null, Secure element = " + seName);
+                int powerState = 0x3B;
+                if(seName != null) {
+                    mSeExtension = new ESeInfo(seName.equals(SECURE_ELEMENT_ESE)?SECURE_ELEMENT_ROUTE_ESE:(seName.equals(SECURE_ELEMENT_UICC)?SECURE_ELEMENT_ROUTE_UICC:SECURE_ELEMENT_ROUTE_UICC2),powerState);
+                } else {
+                    mSeExtension = new ESeInfo(-1, 0);
+                }
+                Log.d(TAG, mSeExtension.toString());
             } finally {
                 nfcSeExtParser.close();
             }
